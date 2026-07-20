@@ -121,6 +121,9 @@
 **/tmp/
 **/temp/
 
+# Android SDK (local build artifacts)
+android-sdk/
+
 # Dart
 **/.dart_tool/
 **/*.dart_tool
