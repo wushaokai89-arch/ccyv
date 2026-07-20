@@ -15,6 +15,13 @@ const JAVA_HOME = process.env.JAVA_HOME || '/usr/lib/jvm/java-17-openjdk-amd64';
 
 if (!fs.existsSync(OUTPUT_DIR)) fs.mkdirSync(OUTPUT_DIR, { recursive: true });
 
+app.use('/output', (req, res, next) => {
+  if (req.path.endsWith('.apk')) {
+    res.setHeader('Content-Type', 'application/vnd.android.package-archive');
+    res.setHeader('Content-Disposition', 'attachment; filename="app-release.apk"');
+  }
+  next();
+});
 app.use('/output', express.static(OUTPUT_DIR));
 app.use(express.static(path.join(__dirname, '..', 'frontend')));
 
@@ -41,7 +48,7 @@ app.post('/api/generate', async (req, res) => {
 
     const buildFile = path.join(taskDir, 'app', 'build.gradle');
     let buildContent = fs.readFileSync(buildFile, 'utf-8');
-    buildContent = buildContent.replace(/applicationId ".*?"/, `applicationId "com.webview.${taskId.replace(/-/g, '')}"`);
+    buildContent = buildContent.replace(/applicationId ".*?"/, `applicationId "com.webview.a${taskId.replace(/-/g, '')}"`);
     fs.writeFileSync(buildFile, buildContent);
 
     if (iconUrl) {

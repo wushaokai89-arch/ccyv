@@ -126,7 +126,8 @@ h1 {
   <button class="btn" id="generateBtn" onclick="generateApk()">生成 APK</button>
   <div class="status" id="status"></div>
   <div class="download-link" id="downloadLink">
-    <a id="downloadA" href="#" download>下载 APK</a>
+    <a class="btn" id="downloadA" href="#" style="display:inline-block;line-height:48px;text-decoration:none;">下载 APK</a>
+    <p id="directUrl" style="margin-top:8px;font-size:12px;color:#999;word-break:break-all;"></p>
   </div>
 </div>
 
@@ -159,7 +160,13 @@ async function generateApk() {
     if (data.success) {
       statusEl.innerHTML = 'APK 生成成功！';
       statusEl.className = 'status success';
-      document.getElementById('downloadA').href = data.downloadUrl;
+      const downloadA = document.getElementById('downloadA');
+      downloadA.href = data.downloadUrl;
+      downloadA.onclick = function(e) {
+        e.preventDefault();
+        window.open(data.downloadUrl, '_blank');
+      };
+      document.getElementById('directUrl').innerHTML = '如无法下载，复制链接在浏览器打开：<br>' + window.location.origin + data.downloadUrl;
       linkEl.style.display = 'block';
     } else {
       showStatus(data.message || '生成失败', 'error');
